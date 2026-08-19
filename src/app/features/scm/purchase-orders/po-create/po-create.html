@@ -1,0 +1,91 @@
+<div class="page">
+  <div class="page-header">
+    <h2>New Purchase Order</h2>
+  </div>
+
+  @if (loading()) {
+    <p class="state-message">Loading...</p>
+  } @else {
+    <div class="card form-card">
+      <div class="form-row">
+        <div class="field">
+          <label for="supplier">Supplier</label>
+          <select id="supplier" [(ngModel)]="supplierId" name="supplier">
+            <option [ngValue]="null">Select a supplier</option>
+            @for (s of suppliers(); track s.supplierId) {
+              <option [ngValue]="s.supplierId">{{ s.supplierName }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="poDate">PO Date</label>
+          <input id="poDate" type="date" [(ngModel)]="poDate" name="poDate" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="remarks">Remarks</label>
+        <input id="remarks" [(ngModel)]="remarks" name="remarks" placeholder="Optional" />
+      </div>
+
+      <h3>Line Items</h3>
+      <table class="lines-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>UOM</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (line of lines(); track $index) {
+            <tr>
+              <td>
+                <select [ngModel]="line.itemId" (ngModelChange)="onItemSelected($index, $event)" name="item-{{$index}}">
+                  <option [ngValue]="null">Select item</option>
+                  @for (item of items(); track item.itemId) {
+                    <option [ngValue]="item.itemId">{{ item.itemCode }} — {{ item.itemDescription }}</option>
+                  }
+                </select>
+              </td>
+              <td>{{ getItemUom(line.itemId) }}</td>
+              <td>
+                <input type="number" min="0" step="1" [ngModel]="line.qty"
+                       (ngModelChange)="updateLine($index, 'qty', $event)" name="qty-{{$index}}" />
+              </td>
+              <td>
+                <input type="number" min="0" step="0.01" [ngModel]="line.unitPrice"
+                       (ngModelChange)="updateLine($index, 'unitPrice', $event)" name="price-{{$index}}" />
+              </td>
+              <td class="amount-cell">{{ lineTotal(line) | currency }}</td>
+              <td>
+                <button type="button" class="btn-link btn-link-danger" (click)="removeLine($index)">Remove</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <button type="button" class="btn-secondary btn-sm" (click)="addLine()">+ Add line</button>
+
+      <div class="grand-total">
+        <span>Total</span>
+        <strong>{{ grandTotal() | currency }}</strong>
+      </div>
+
+      @if (error()) {
+        <div class="error-message">{{ error() }}</div>
+      }
+
+      <div class="form-actions">
+        <button class="btn-secondary" (click)="cancel()">Cancel</button>
+        <button class="btn-primary" (click)="save()" [disabled]="saving()">
+          {{ saving() ? 'Saving...' : 'Save Purchase Order' }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

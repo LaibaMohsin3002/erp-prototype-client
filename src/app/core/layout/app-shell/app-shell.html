@@ -1,0 +1,15 @@
+<div class="shell">
+  @if (toast.message()) {
+  <div class="toast">{{ toast.message() }}</div>
+  }
+  <nav class="topnav">
+    <a routerLink="/" class="nav-brand">ERP<span>.</span></a>
+    <div class="nav-user">
+      <span>{{ auth.currentUser()?.fullName }}</span>
+      <button (click)="auth.logout()">Log out</button>
+    </div>
+  </nav>
+  <main class="shell-content">
+    <router-outlet />
+  </main>
+</div>

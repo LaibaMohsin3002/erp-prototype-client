@@ -1,0 +1,58 @@
+.shell { min-height: 100vh; background: var(--bg); }
+
+.topnav {
+  height: 56px;
+  background: #12151c;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  gap: var(--space-8);
+}
+
+.nav-brand {
+  font-family: 'Space Grotesk', var(--font-sans);
+  font-weight: 700;
+  color: white;
+  font-size: 15px;
+  text-decoration: none;
+  span { color: #c98a3a; }
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: 13px;
+  color: #b8bdc9;
+
+  button {
+    background: none;
+    border: 1px solid #2a3142;
+    color: #b8bdc9;
+    padding: 5px 12px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    &:hover { background: #1c202b; color: white; }
+  }
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #12151c;
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  border-left: 3px solid #16a34a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 200;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}

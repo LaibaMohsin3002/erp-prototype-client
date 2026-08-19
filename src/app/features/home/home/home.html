@@ -1,0 +1,36 @@
+<!-- home.html -->
+<div class="page">
+  @if (loading()) {
+    <p class="state-message">Loading...</p>
+  } @else if (!selectedRole()) {
+    <div class="page-header">
+      <h2>Choose a role</h2>
+      <p class="subtitle">You have {{ roles().length }} assigned role(s)</p>
+    </div>
+
+    <div class="tile-grid">
+      @for (role of roles(); track role.roleId) {
+        <button class="role-tile" (click)="selectRole(role)">
+          <span class="tile-name">{{ role.roleName }}</span>
+          <span class="tile-count">{{ role.pages.length }} page(s)</span>
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="page-header">
+      <div>
+        <button class="btn-link" (click)="backToRoles()">← Back to roles</button>
+        <h2>{{ selectedRole()!.roleName }}</h2>
+      </div>
+    </div>
+
+    <div class="tile-grid">
+      @for (page of selectedRole()!.pages; track page.pageId) {
+        <button class="page-tile" (click)="goToPage(page)">
+          <span class="tile-module">{{ page.moduleName }}</span>
+          <span class="tile-name">{{ page.pageName }}</span>
+        </button>
+      }
+    </div>
+  }
+</div>

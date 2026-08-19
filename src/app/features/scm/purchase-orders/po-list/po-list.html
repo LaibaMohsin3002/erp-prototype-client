@@ -1,0 +1,40 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Purchase Orders</h2>
+    <button class="btn-primary btn-sm" (click)="goToCreate()">New purchase order</button>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading purchase orders...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else if (orders().length === 0) {
+      <p class="state-message">No purchase orders yet.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>PO Number</th>
+            <th>Date</th>
+            <th>Supplier</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (po of orders(); track po.poId) {
+            <tr (click)="goToDetail(po.poId)" class="clickable-row">
+              <td>{{ po.poNumber }}</td>
+              <td>{{ po.poDate | date:'mediumDate' }}</td>
+              <td>{{ po.supplierName }}</td>
+              <td>
+                <span class="status-badge" [class]="statusClass(po.status)">{{ po.status }}</span>              </td>
+              <td>{{ po.totalAmount | currency }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

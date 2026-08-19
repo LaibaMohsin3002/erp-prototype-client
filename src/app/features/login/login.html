@@ -1,0 +1,50 @@
+<div class="login-page">
+  <div class="brand-panel">
+    <div class="brand-mark">ERP<span>.</span></div>
+
+    <div class="brand-copy">
+      <h1>Every document,<br>tracked to approval.</h1>
+      <p>One workflow engine, every module — from purchase orders to whatever comes next.</p>
+    </div>
+
+    <div class="status-timeline">
+      <div class="status-step is-active">
+        <div class="dot"><div class="connector"></div></div>
+        <div class="label">Draft</div>
+      </div>
+      <div class="status-step is-active">
+        <div class="dot"><div class="connector"></div></div>
+        <div class="label">Submitted</div>
+      </div>
+      <div class="status-step">
+        <div class="dot"><div class="connector"></div></div>
+        <div class="label">Approved</div>
+      </div>
+      <div class="status-step">
+        <div class="dot"></div>
+        <div class="label">Posted</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-panel">
+    <div class="login-card">
+      <h2>Welcome back</h2>
+      <p class="subtitle">Sign in to your account</p>
+      <form (ngSubmit)="onSubmit()">
+        <div class="field">
+          <label for="userName">Username</label>
+          <input id="userName" [(ngModel)]="userName" name="userName" required autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" [(ngModel)]="password" name="password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn-primary">Log in</button>
+        @if (errorMessage()) {
+          <div class="error-message">{{ errorMessage() }}</div>
+        }
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="page">
+  @if (loading()) {
+    <p class="state-message">Loading...</p>
+  } @else if (error()) {
+    <p class="state-message">{{ error() }}</p>
+  } @else if (po(); as order) {
+    <div class="page-header">
+      <div>
+        <h2>{{ order.poNumber }}</h2>
+        <span class="status-badge" [class]="statusClass(order.status)">{{ order.status }}</span>
+      </div>
+      <a routerLink="/scm/purchase-orders" class="btn-secondary">Back to list</a>
+    </div>
+
+    <div class="card">
+      <div class="summary-grid">
+        <div>
+          <label>Supplier</label>
+          <span>{{ order.supplierName }}</span>
+        </div>
+        <div>
+          <label>PO Date</label>
+          <span>{{ order.poDate | date:'mediumDate' }}</span>
+        </div>
+        <div>
+          <label>Remarks</label>
+          <span>{{ order.remarks || '—' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Line Items</h3>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item Code</th>
+            <th>Description</th>
+            <th>UOM</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (line of order.lines; track line.poLineId) {
+            <tr>
+              <td>{{ line.lineNo }}</td>
+              <td>{{ line.itemCode }}</td>
+              <td>{{ line.itemDescription }}</td>
+              <td>{{ line.uom }}</td>
+              <td>{{ line.qty }}</td>
+              <td>{{ line.unitPrice | currency }}</td>
+              <td class="amount-cell">{{ line.amount | currency }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4"></td>
+            <td class="total-label">Total</td>
+            <td>{{ order.totalQty }}</td>
+            <td class="amount-cell">{{ order.totalAmount | currency }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  }
+</div>

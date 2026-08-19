@@ -1,0 +1,103 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Users</h2>
+    <button class="btn-primary btn-sm" (click)="openCreate()">New user</button>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading users...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.userId) {
+            <tr>
+              <td>{{ user.userName }}</td>
+              <td>{{ user.fullName }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="status-badge" [class.active]="user.isActive" [class.inactive]="!user.isActive">
+                  {{ user.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-link" (click)="openEdit(user)">Edit</button>
+                @if (user.isActive) {
+                  <button class="btn-link btn-link-danger" (click)="setActive(user, false)">Deactivate</button>
+                } @else {
+                  <button class="btn-link" (click)="setActive(user, true)">Activate</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  @if (formOpen()) {
+    <div class="modal-backdrop" (click)="closeForm()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>{{ editingId() === null ? 'New user' : 'Edit user' }}</h3>
+
+        <div class="field">
+          <label for="userName">Username</label>
+          <input id="userName" [(ngModel)]="userName" name="userName" [disabled]="editingId() !== null" />
+        </div>
+
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input id="fullName" [(ngModel)]="fullName" name="fullName" />
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" [(ngModel)]="email" name="email" />
+        </div>
+
+        @if (editingId() === null) {
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" [(ngModel)]="password" name="password" />
+          </div>
+        }
+
+        <div class="field">
+          <label>Roles</label>
+          <div class="page-picker">
+            @for (role of allRoles(); track role.roleId) {
+              <label class="page-option">
+                <input
+                  type="checkbox"
+                  [checked]="isRoleSelected(role.roleId)"
+                  (change)="toggleRole(role.roleId, $any($event.target).checked)"
+                />
+                <span>{{ role.roleName }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        @if (formError()) {
+          <div class="error-message">{{ formError() }}</div>
+        }
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeForm()">Cancel</button>
+          <button class="btn-primary" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

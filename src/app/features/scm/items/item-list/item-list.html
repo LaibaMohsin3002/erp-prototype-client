@@ -1,0 +1,84 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Item Master</h2>
+    <button class="btn-primary btn-sm" (click)="openCreate()">New item</button>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading items...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Description</th>
+            <th>UOM</th>
+            <th>Default Price</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items(); track item.itemId) {
+            <tr>
+              <td>{{ item.itemCode }}</td>
+              <td>{{ item.itemDescription }}</td>
+              <td>{{ item.uom }}</td>
+              <td>{{ item.defaultPurchasePrice | currency }}</td>
+              <td>
+                <span class="status-badge" [class.active]="item.isActive" [class.inactive]="!item.isActive">
+                  {{ item.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+             <td>
+              <button class="btn-link" (click)="openEdit(item)">Edit</button>
+              @if (item.isActive) {
+                <button class="btn-link btn-link-danger" (click)="setActive(item, false)">Deactivate</button>
+              } @else {
+                <button class="btn-link" (click)="setActive(item, true)">Activate</button>
+              }
+             </td>
+            </tr>
+            }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  @if (formOpen()) {
+    <div class="modal-backdrop" (click)="closeForm()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>{{ editingId() === null ? 'New supplier' : 'Edit supplier' }}</h3>
+
+        <div class="field">
+          <label for="itemCode">Item code</label>
+          <input id="itemCode" [(ngModel)]="itemCode" name="itemCode" placeholder="e.g. ITM004" />
+        </div>
+        <div class="field">
+          <label for="itemDescription">Description</label>
+          <input id="itemDescription" [(ngModel)]="itemDescription" name="itemDescription" />
+        </div>
+        <div class="field">
+          <label for="uom">Unit of measure</label>
+          <input id="uom" [(ngModel)]="uom" name="uom" placeholder="e.g. Box, Each, Kg" />
+        </div>
+        <div class="field">
+          <label for="defaultPurchasePrice">Default purchase price</label>
+          <input id="defaultPurchasePrice" type="number" min="0" step="0.01" [(ngModel)]="defaultPurchasePrice" name="defaultPurchasePrice" />
+        </div>
+
+        @if (formError()) {
+          <div class="error-message">{{ formError() }}</div>
+        }
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeForm()">Cancel</button>
+          <button class="btn-primary" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

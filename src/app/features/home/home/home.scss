@@ -1,0 +1,71 @@
+// home.scss
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.page-header {
+  margin-bottom: var(--space-6);
+  h2 {
+    font-family: 'Space Grotesk', var(--font-sans);
+    margin: var(--space-2) 0 0;
+  }
+  .subtitle { color: var(--text-muted); font-size: 13px; }
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0;
+  cursor: pointer;
+  &:hover { text-decoration: underline; }
+}
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.role-tile, .page-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: var(--space-6);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: border-color 0.15s ease, transform 0.1s ease;
+
+  &:hover {
+    border-color: #c98a3a;
+    transform: translateY(-1px);
+  }
+}
+
+.tile-module {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.tile-name {
+  font-family: 'Space Grotesk', var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tile-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.state-message { padding: var(--space-8); text-align: center; color: var(--text-muted); }

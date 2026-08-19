@@ -1,0 +1,66 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  h2 { margin: 0; }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  th, td {
+    text-align: left;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  th { color: var(--text-muted); font-weight: 500; background: var(--bg); }
+  tbody tr:last-child td { border-bottom: none; }
+}
+
+.clickable-row {
+  cursor: pointer;
+  &:hover { background: var(--bg); }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--bg);
+  color: var(--text-muted);
+
+  &.status-draft { background: #fef3e2; color: #b45309; }
+  &.status-submitted { background: #eff6ff; color: #2563eb; }
+  &.status-approved { background: var(--success-bg); color: var(--success-text); }
+  &.status-rejected { background: var(--danger-bg); color: var(--danger); }
+}
+
+.state-message { padding: var(--space-8); text-align: center; color: var(--text-muted); }
+
+.btn-primary {
+  padding: 9px 16px;
+  background: #12151c;
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  &:hover { background: #262b38; }
+}
+.btn-sm { padding: 7px 14px; }

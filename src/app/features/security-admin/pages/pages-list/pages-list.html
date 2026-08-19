@@ -1,0 +1,89 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Pages</h2>
+    <button class="btn-primary btn-sm" (click)="openCreate()">New page</button>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading pages...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Module</th>
+            <th>Route</th>
+            <th>Sequence</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+         @for (page of pages(); track page.pageId) {
+            <tr>
+                <td>{{ page.pageCode }}</td>
+                <td>{{ page.pageName }}</td>
+                <td>{{ page.moduleName }}</td>
+                <td>{{ page.pageRoute }}</td>
+                <td>{{ page.displaySequence }}</td>
+                <td>
+                <span class="status-badge" [class.active]="page.isActive" [class.inactive]="!page.isActive">
+                    {{ page.isActive ? 'Active' : 'Inactive' }}
+                </span>
+                </td>
+                <td>
+                @if (page.isActive) {
+                    <button class="btn-link btn-link-danger" (click)="setActive(page, false)">Deactivate</button>
+                } @else {
+                    <button class="btn-link" (click)="setActive(page, true)">Activate</button>
+                }
+                </td>
+            </tr>
+            }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  @if (formOpen()) {
+    <div class="modal-backdrop" (click)="closeForm()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>New page</h3>
+
+        <div class="field">
+          <label for="pageCode">Page code</label>
+          <input id="pageCode" [(ngModel)]="pageCode" name="pageCode" placeholder="e.g. SCM_ITEM" />
+        </div>
+        <div class="field">
+          <label for="pageName">Page name</label>
+          <input id="pageName" [(ngModel)]="pageName" name="pageName" />
+        </div>
+        <div class="field">
+          <label for="moduleName">Module</label>
+          <input id="moduleName" [(ngModel)]="moduleName" name="moduleName" placeholder="e.g. SCM" />
+        </div>
+        <div class="field">
+          <label for="pageRoute">Route</label>
+          <input id="pageRoute" [(ngModel)]="pageRoute" name="pageRoute" placeholder="e.g. /scm/items" />
+        </div>
+        <div class="field">
+          <label for="displaySequence">Display sequence</label>
+          <input id="displaySequence" type="number" [(ngModel)]="displaySequence" name="displaySequence" />
+        </div>
+
+        @if (formError()) {
+          <div class="error-message">{{ formError() }}</div>
+        }
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeForm()">Cancel</button>
+          <button class="btn-primary" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

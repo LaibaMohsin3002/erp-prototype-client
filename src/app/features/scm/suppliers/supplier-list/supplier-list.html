@@ -1,0 +1,72 @@
+<div class="page">
+  <div class="page-header">
+    <h2>Suppliers</h2>
+    <button class="btn-primary btn-sm" (click)="openCreate()">New supplier</button>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading suppliers...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (supplier of suppliers(); track supplier.supplierId) {
+            <tr>
+              <td>{{ supplier.supplierCode }}</td>
+              <td>{{ supplier.supplierName }}</td>
+              <td>
+                <span class="status-badge" [class.active]="supplier.isActive" [class.inactive]="!supplier.isActive">
+                  {{ supplier.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+             <td>
+              <button class="btn-link" (click)="openEdit(supplier)">Edit</button>
+              @if (supplier.isActive) {
+                <button class="btn-link btn-link-danger" (click)="setActive(supplier, false)">Deactivate</button>
+              } @else {
+                <button class="btn-link" (click)="setActive(supplier, true)">Activate</button>
+              }
+            </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  @if (formOpen()) {
+    <div class="modal-backdrop" (click)="closeForm()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>{{ editingId() === null ? 'New supplier' : 'Edit supplier' }}</h3>
+
+        <div class="field">
+          <label for="supplierCode">Supplier code</label>
+          <input id="supplierCode" [(ngModel)]="supplierCode" name="supplierCode" placeholder="e.g. SUP003" />
+        </div>
+        <div class="field">
+          <label for="supplierName">Supplier name</label>
+          <input id="supplierName" [(ngModel)]="supplierName" name="supplierName" />
+        </div>
+
+        @if (formError()) {
+          <div class="error-message">{{ formError() }}</div>
+        }
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeForm()">Cancel</button>
+          <button class="btn-primary" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

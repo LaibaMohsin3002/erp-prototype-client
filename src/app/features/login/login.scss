@@ -1,0 +1,189 @@
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  font-family: 'Inter', var(--font-sans);
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ---- Left: dark panel with the workflow signature ----
+.brand-panel {
+  background: #12151c;
+  color: #e7e9ee;
+  padding: var(--space-8) 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 860px) {
+    display: none;
+  }
+}
+
+.brand-mark {
+  font-family: 'Space Grotesk', var(--font-sans);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+
+  span { color: #c98a3a; }
+}
+
+.brand-copy {
+  max-width: 360px;
+
+  h1 {
+    font-family: 'Space Grotesk', var(--font-sans);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-3);
+  }
+
+  p {
+    color: #9298a6;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+// The signature: a vertical status timeline echoing PO document states
+.status-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.status-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  opacity: 0.4;
+  transition: opacity 0.4s ease;
+
+  &.is-active { opacity: 1; }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #454b5c;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  &.is-active .dot {
+    background: #c98a3a;
+    box-shadow: 0 0 0 4px rgba(201, 138, 58, 0.15);
+  }
+
+  .connector {
+    position: absolute;
+    top: 8px;
+    left: 3.5px;
+    width: 1px;
+    height: 38px;
+    background: #2a3142;
+  }
+
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #b8bdc9;
+  }
+
+  &.is-active .label { color: #e7e9ee; }
+}
+
+// ---- Right: the actual form ----
+.form-panel {
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 340px;
+
+  h2 {
+    font-family: 'Space Grotesk', var(--font-sans);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: var(--space-8);
+  }
+}
+
+.field {
+  margin-bottom: var(--space-4);
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: var(--space-2);
+  }
+
+  input {
+    width: 100%;
+    padding: 11px var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus-visible {
+      outline: none;
+      border-color: #c98a3a;
+      box-shadow: 0 0 0 3px rgba(201, 138, 58, 0.15);
+    }
+  }
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #12151c;
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', var(--font-sans);
+  transition: background 0.15s ease;
+  margin-top: var(--space-2);
+
+  &:hover { background: #262b38; }
+  &:focus-visible { outline: 2px solid #c98a3a; outline-offset: 2px; }
+}
+
+.error-message {
+  background: var(--danger-bg);
+  color: var(--danger);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  font-size: 13px;
+  margin-top: var(--space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-step { transition: none; }
+}
