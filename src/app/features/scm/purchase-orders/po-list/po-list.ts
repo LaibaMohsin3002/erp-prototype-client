@@ -1,7 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 interface POListDto {
   poId: number;
@@ -15,16 +16,18 @@ interface POListDto {
 @Component({
   selector: 'app-po-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './po-list.html',
   styleUrl: './po-list.scss'
 })
+
 export class PoList implements OnInit {
   private apiUrl = 'https://localhost:7000/api/purchaseorders'; // match your actual API port
 
   orders = signal<POListDto[]>([]);
   loading = signal(true);
   error = signal('');
+  searchTerm = signal('');
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -50,5 +53,16 @@ export class PoList implements OnInit {
 
   statusClass(status: string): string {
   return `status-${status.toLowerCase()}`;
-}
+  }
+
+  filteredOrders = computed(() => {
+  const term = this.searchTerm().toLowerCase().trim();
+  if (!term) return this.orders();
+  return this.orders().filter(o =>
+    o.poNumber.toLowerCase().includes(term) ||
+    o.supplierName.toLowerCase().includes(term) ||
+    o.status.toLowerCase().includes(term)
+  );
+  });
+
 }

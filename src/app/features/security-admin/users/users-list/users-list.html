@@ -4,6 +4,8 @@
     <button class="btn-primary btn-sm" (click)="openCreate()">New user</button>
   </div>
 
+  <input class="search-input" placeholder="Search users..." [(ngModel)]="searchTerm" name="search" />
+
   <div class="card">
     @if (loading()) {
       <p class="state-message">Loading users...</p>
@@ -21,7 +23,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (user of users(); track user.userId) {
+          @for (user of filteredUsers(); track user.userId) {
             <tr>
               <td>{{ user.userName }}</td>
               <td>{{ user.fullName }}</td>

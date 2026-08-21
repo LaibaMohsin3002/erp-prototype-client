@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../../../core/toast'; // adjust path
@@ -46,6 +46,7 @@ export class RolesList implements OnInit {
   description = '';
   selectedPageIds = signal<Set<number>>(new Set());
   formError = signal('');
+  searchTerm = signal('');
 
   constructor(private http: HttpClient, private toast: Toast) {}
 
@@ -148,4 +149,13 @@ export class RolesList implements OnInit {
     error: () => this.error.set(`Failed to ${action} role.`)
   });
   }
+
+  filteredRoles = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    if (!term) return this.roles();
+    return this.roles().filter(r =>
+      r.roleName.toLowerCase().includes(term) ||
+      (r.description ?? '').toLowerCase().includes(term)
+    );
+  });
 }

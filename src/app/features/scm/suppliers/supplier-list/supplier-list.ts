@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -30,6 +30,7 @@ export class SupplierList implements OnInit {
   supplierCode = '';
   supplierName = '';
   editingId = signal<number | null>(null);
+  searchTerm = signal('');
 
   constructor(private http: HttpClient, private toast: Toast) {}
 
@@ -119,4 +120,13 @@ save() {
       error: () => this.error.set(`Failed to ${action} supplier.`)
     });
   }
+
+  filteredSuppliers = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    if (!term) return this.suppliers();
+    return this.suppliers().filter(s =>
+      s.supplierCode.toLowerCase().includes(term) ||
+      s.supplierName.toLowerCase().includes(term)
+    );
+  });
 }

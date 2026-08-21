@@ -4,6 +4,8 @@
     <button class="btn-primary btn-sm" (click)="goToCreate()">New purchase order</button>
   </div>
 
+  <input class="search-input" placeholder="Search purchase orders..." [(ngModel)]="searchTerm" name="search" />
+  
   <div class="card">
     @if (loading()) {
       <p class="state-message">Loading purchase orders...</p>
@@ -23,7 +25,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (po of orders(); track po.poId) {
+          @for (po of filteredOrders(); track po.poId) {
             <tr (click)="goToDetail(po.poId)" class="clickable-row">
               <td>{{ po.poNumber }}</td>
               <td>{{ po.poDate | date:'mediumDate' }}</td>

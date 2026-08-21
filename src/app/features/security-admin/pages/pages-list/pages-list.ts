@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../../../core/toast'; // adjust path
@@ -34,6 +34,7 @@ export class PagesList implements OnInit {
   moduleName = '';
   pageRoute = '';
   displaySequence = 1;
+  searchTerm = signal('');
 
   constructor(private http: HttpClient, private toast: Toast) {}
 
@@ -96,7 +97,7 @@ export class PagesList implements OnInit {
     },
     error: (err) => this.formError.set(err.error ?? 'Failed to create page.')
   });
-}
+  }
 
   setActive(page: PageDto, isActive: boolean) {
   const action = isActive ? 'activate' : 'deactivate';
@@ -104,5 +105,15 @@ export class PagesList implements OnInit {
     next: () => this.load(),
     error: () => this.error.set(`Failed to ${action} page.`)
   });
-}
+  }
+
+    filteredPages = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    if (!term) return this.pages();
+    return this.pages().filter(p =>
+      p.pageCode.toLowerCase().includes(term) ||
+      p.pageName.toLowerCase().includes(term) ||
+      p.moduleName.toLowerCase().includes(term)
+    );
+  });
 }

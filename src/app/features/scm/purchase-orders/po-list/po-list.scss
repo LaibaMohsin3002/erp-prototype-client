@@ -64,3 +64,15 @@ table {
   &:hover { background: #262b38; }
 }
 .btn-sm { padding: 7px 14px; }
+
+.search-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 9px var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: var(--space-4);
+  &:focus-visible { outline: none; border-color: #c98a3a; box-shadow: 0 0 0 3px rgba(201, 138, 58, 0.15); }
+}

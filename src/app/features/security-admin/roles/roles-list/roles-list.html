@@ -4,6 +4,8 @@
     <button class="btn-primary btn-sm" (click)="openCreate()">New role</button>
   </div>
 
+  <input class="search-input" placeholder="Search roles..." [(ngModel)]="searchTerm" name="search" />
+  
   <div class="card">
     @if (loading()) {
       <p class="state-message">Loading roles...</p>
@@ -20,7 +22,8 @@
           </tr>
         </thead>
         <tbody>
-          @for (role of roles(); track role.roleId) {
+          @for (role of filteredRoles(); track role.roleId)
+          {
             <tr>
               <td>{{ role.roleName }}</td>
               <td>{{ role.description || '—' }}</td>

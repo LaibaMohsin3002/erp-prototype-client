@@ -1,7 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../../../core/toast'; // adjust path
+import { Component, OnInit, signal, computed } from '@angular/core'; // add `computed` to the import
 
 interface UserListDto {
   userId: number;
@@ -47,7 +47,8 @@ export class UsersList implements OnInit {
   password = '';
   selectedRoleIds = signal<Set<number>>(new Set());
   formError = signal('');
-
+  searchTerm = signal('');
+  
 constructor(private http: HttpClient, private toast: Toast) {}
 
   ngOnInit() {
@@ -171,4 +172,15 @@ constructor(private http: HttpClient, private toast: Toast) {}
       error: () => this.error.set(`Failed to ${action} user.`)
     });
   }
+
+
+filteredUsers = computed(() => {
+  const term = this.searchTerm().toLowerCase().trim();
+  if (!term) return this.users();
+  return this.users().filter(u =>
+    u.userName.toLowerCase().includes(term) ||
+    u.fullName.toLowerCase().includes(term) ||
+    u.email.toLowerCase().includes(term)
+  );
+});
 }

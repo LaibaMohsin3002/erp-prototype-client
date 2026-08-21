@@ -3,7 +3,9 @@
     <h2>Suppliers</h2>
     <button class="btn-primary btn-sm" (click)="openCreate()">New supplier</button>
   </div>
-
+ 
+  <input class="search-input" placeholder="Search suppliers..." [(ngModel)]="searchTerm" name="search" />
+  
   <div class="card">
     @if (loading()) {
       <p class="state-message">Loading suppliers...</p>
@@ -20,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (supplier of suppliers(); track supplier.supplierId) {
+          @for (supplier of filteredSuppliers(); track supplier.supplierId) {
             <tr>
               <td>{{ supplier.supplierCode }}</td>
               <td>{{ supplier.supplierName }}</td>

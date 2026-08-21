@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -34,7 +34,8 @@ export class ItemList implements OnInit {
   uom = '';
   defaultPurchasePrice = 0;
   editingId = signal<number | null>(null);
-  
+  searchTerm = signal('');
+
   constructor(private http: HttpClient, private toast: Toast) {}
 
   ngOnInit() {
@@ -148,4 +149,13 @@ save() {
       error: () => this.error.set(`Failed to ${action} item.`)
     });
   }
+  
+  filteredItems = computed(() => {
+  const term = this.searchTerm().toLowerCase().trim();
+  if (!term) return this.items();
+  return this.items().filter(i =>
+    i.itemCode.toLowerCase().includes(term) ||
+    i.itemDescription.toLowerCase().includes(term)
+  );
+});
 }
