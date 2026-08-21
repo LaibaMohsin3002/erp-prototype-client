@@ -1,0 +1,64 @@
+<div class="page">
+  <div class="page-header">
+    <h2>My Approvals</h2>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else if (tasks().length === 0) {
+      <p class="state-message">No pending approvals.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th>Type</th>
+            <th>Step</th>
+            <th>Received</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (task of tasks(); track task.workflowTaskId) {
+            <tr>
+              <td>{{ task.documentLabel }}</td>
+              <td>{{ task.documentType }}</td>
+              <td>Step {{ task.stepNo }}</td>
+              <td>{{ task.createdDate | date:'short' }}</td>
+              <td>
+                <button class="btn-link" (click)="openAction(task.workflowTaskId)">Review</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  @if (actioningTaskId() !== null) {
+    <div class="modal-backdrop" (click)="cancelAction()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Take action</h3>
+
+        <div class="field">
+          <label for="comments">Comments</label>
+          <input id="comments" [(ngModel)]="comments" name="comments" placeholder="Optional" />
+        </div>
+
+        @if (error()) {
+          <div class="error-message">{{ error() }}</div>
+        }
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="cancelAction()">Cancel</button>
+          <button class="btn-link-danger btn-outline" (click)="takeAction('Return')">Return</button>
+          <button class="btn-link-danger btn-outline" (click)="takeAction('Reject')">Reject</button>
+          <button class="btn-primary" (click)="takeAction('Approve')">Approve</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

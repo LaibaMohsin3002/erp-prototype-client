@@ -32,6 +32,7 @@ export const routes: Routes = [
     { path: 'scm/purchase-orders/:id', loadComponent: () => import('./features/scm/purchase-orders/po-detail/po-detail').then(m => m.PoDetail) },
     { path: 'scm/items', loadComponent: () => import('./features/scm/items/item-list/item-list').then(m => m.ItemList) },
     { path: 'scm/suppliers', loadComponent: () => import('./features/scm/suppliers/supplier-list/supplier-list').then(m => m.SupplierList) },
+    { path: 'workflow/inbox', loadComponent: () => import('./features/workflow/inbox/inbox/inbox').then(m => m.Inbox) },
   ]
 },
   { path: '**', redirectTo: '/login' },

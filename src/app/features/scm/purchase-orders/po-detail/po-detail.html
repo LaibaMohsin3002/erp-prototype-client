@@ -12,6 +12,41 @@
       <a routerLink="/scm/purchase-orders" class="btn-secondary">Back to list</a>
     </div>
 
+      @if (order.status === 'Draft') {
+      <div class="submit-banner">
+        <div class="submit-banner-text">
+          <strong>This purchase order is still a draft.</strong>
+          <span>Submit it to start the approval process.</span>
+        </div>
+        <button class="btn-submit" (click)="submitForApproval()" [disabled]="submitting()">
+          {{ submitting() ? 'Submitting…' : 'Submit for Approval →' }}
+        </button>
+      </div>
+    }
+
+    @if (history().length > 0) {
+      <h3>Approval History</h3>
+      <div class="card">
+        <table>
+          <thead>
+            <tr><th>Step</th><th>Role</th><th>Status</th><th>Actioned By</th><th>Date</th><th>Comments</th></tr>
+          </thead>
+          <tbody>
+            @for (h of history(); track h.stepNo) {
+              <tr>
+                <td>{{ h.stepNo }}</td>
+                <td>{{ h.assignedRole }}</td>
+                <td>{{ h.status }}</td>
+                <td>{{ h.actionedBy || '—' }}</td>
+                <td>{{ h.actionedDate ? (h.actionedDate | date:'short') : '—' }}</td>
+                <td>{{ h.comments || '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
     <div class="card">
       <div class="summary-grid">
         <div>

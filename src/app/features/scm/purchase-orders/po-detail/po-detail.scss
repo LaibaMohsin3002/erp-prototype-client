@@ -96,3 +96,44 @@ tfoot td {
 }
 
 .state-message { padding: var(--space-8); text-align: center; color: var(--text-muted); }
+
+.submit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fef3e2;
+  border: 1px solid #f5d9a8;
+  border-radius: 8px;
+  padding: var(--space-4) var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.submit-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 14px;
+    color: #92400e;
+  }
+  span {
+    font-size: 13px;
+    color: #b45309;
+  }
+}
+
+.btn-submit {
+  padding: 10px 20px;
+  background: #c98a3a;
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+
+  &:hover:not(:disabled) { background: #b3792f; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
