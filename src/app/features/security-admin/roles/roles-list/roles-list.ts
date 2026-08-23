@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../../../core/toast'; // adjust path
+import { RouterLink } from '@angular/router';
 
 interface RoleListDto {
   roleId: number;
@@ -27,7 +28,7 @@ interface PageDto {
 @Component({
   selector: 'app-roles-list',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './roles-list.html',
   styleUrl: './roles-list.scss'
 })

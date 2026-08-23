@@ -1,0 +1,48 @@
+<div class="page">
+  @if (loading()) {
+    <p class="state-message">Loading...</p>
+  } @else if (error()) {
+    <p class="state-message">{{ error() }}</p>
+  } @else if (definition(); as def) {
+    <div class="page-header">
+      <div>
+        <a routerLink="/workflow/definitions" class="back-link">← Back to Workflow Definitions</a>
+        <h2>{{ def.name }}</h2>
+        <p class="subtitle">
+          <span class="doc-type-badge">{{ def.documentType }}</span>
+          {{ def.minAmount | currency }} – {{ def.maxAmount | currency }}
+        </p>
+      </div>
+    </div>
+
+    <div class="card diagram-card">
+      <div class="diagram">
+        @for (stage of stages(); track $index) {
+          <div class="stage">
+            <div class="stage-label">Step {{ stage[0].stepNo }}@if (stage.length > 1) {<span>–{{ stage[stage.length-1].stepNo }}</span>}</div>
+            <div class="stage-nodes" [class.parallel]="stage.length > 1">
+              @for (step of stage; track step.workflowStepId) {
+                <div class="node">
+                  <span class="node-role">{{ step.requiredRole }}</span>
+                  @if (step.timeLimitHours > 0) {
+                    <span class="node-meta">{{ step.timeLimitHours }}h limit</span>
+                  }
+                </div>
+              }
+            </div>
+            @if (stage.length > 1) {
+              <div class="parallel-tag">runs in parallel</div>
+            }
+          </div>
+          @if (!$last) {
+            <div class="arrow">→</div>
+          }
+        }
+        <div class="arrow">→</div>
+        <div class="stage end-stage">
+          <div class="node end-node">✓ Approved</div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

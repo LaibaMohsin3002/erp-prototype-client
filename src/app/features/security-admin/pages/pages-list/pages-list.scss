@@ -571,3 +571,12 @@ button {
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
+
+.back-link {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 4px;
+  &:hover { color: var(--primary); }
+}

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 interface POListDto {
   poId: number;
@@ -16,7 +17,7 @@ interface POListDto {
 @Component({
   selector: 'app-po-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './po-list.html',
   styleUrl: './po-list.scss'
 })
@@ -28,6 +29,7 @@ export class PoList implements OnInit {
   loading = signal(true);
   error = signal('');
   searchTerm = signal('');
+  statusFilter = signal('');
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -55,14 +57,22 @@ export class PoList implements OnInit {
   return `status-${status.toLowerCase()}`;
   }
 
-  filteredOrders = computed(() => {
-  const term = this.searchTerm().toLowerCase().trim();
-  if (!term) return this.orders();
-  return this.orders().filter(o =>
-    o.poNumber.toLowerCase().includes(term) ||
-    o.supplierName.toLowerCase().includes(term) ||
-    o.status.toLowerCase().includes(term)
-  );
-  });
+  // filteredOrders = computed(() => {
+  // const term = this.searchTerm().toLowerCase().trim();
+  // if (!term) return this.orders();
+  // return this.orders().filter(o =>
+  //   o.poNumber.toLowerCase().includes(term) ||
+  //   o.supplierName.toLowerCase().includes(term) ||
+  //   o.status.toLowerCase().includes(term)
+  // );
+  // });
 
+filteredOrders = computed(() => {
+  const term = this.searchTerm().toLowerCase().trim();
+  const status = this.statusFilter();
+  return this.orders().filter(o =>
+    (!status || o.status === status) &&
+    (!term || o.poNumber.toLowerCase().includes(term) || o.supplierName.toLowerCase().includes(term))
+  );
+});
 }

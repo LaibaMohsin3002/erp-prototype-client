@@ -1,0 +1,135 @@
+<div class="designer-page">
+  <h2>{{ editingDefinitionId ? 'Edit Workflow' : 'New Workflow' }}</h2>
+  <div class="designer-header">
+    <div class="header-fields">
+      <div class="field">
+        <label>Workflow name</label>
+        <input [(ngModel)]="name" name="name" placeholder="e.g. Standard PO Approval" />
+      </div>
+      <div class="field">
+        <label>Document type</label>
+        <input [(ngModel)]="documentType" name="documentType" placeholder="e.g. PurchaseOrder" />
+      </div>
+      <div class="field field-sm">
+        <label>Min amount</label>
+        <input type="number" [(ngModel)]="minAmount" name="minAmount" />
+      </div>
+      <div class="field field-sm">
+        <label>Max amount</label>
+        <input type="number" [(ngModel)]="maxAmount" name="maxAmount" />
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="addStep()">+ Add Step</button>
+      @if (selectedConnectionId()) {
+        <button class="btn-secondary btn-danger-outline" (click)="deleteSelectedConnection()">Delete Connection</button>
+      }
+      <button class="btn-secondary" (click)="cancel()">Cancel</button>
+      <button class="btn-primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : (editingDefinitionId ? 'Update Workflow' : 'Save Workflow') }}
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  <div class="canvas-wrapper">
+    <f-flow fDraggable (fMoveNodes)="onMoveNodes($event)" (fCreateConnection)="onCreateConnection($event)">
+      <f-connection-for-create />
+      <f-canvas>
+
+        <ng-container ngProjectAs="[fConnections]">
+          @for (conn of connections(); track conn.id) {
+            <f-connection
+              [fSourceId]="conn.sourceId"
+              [fTargetId]="conn.targetId"
+              (click)="selectConnection(conn.id)"
+              [class.selected-connection]="selectedConnectionId() === conn.id"
+            >
+              <svg f-connection-marker type="end" viewBox="0 0 10 10" width="10" height="10">
+                <path d="M0,0 L10,5 L0,10 z" fill="context-fill"></path>
+              </svg>
+            </f-connection>
+          }
+        </ng-container>
+
+        <ng-container ngProjectAs="[fNodes]">
+          @for (node of nodes(); track node.id) {
+            <div
+              fNode
+              [fNodeId]="node.id"
+              [fNodePosition]="{ x: node.x, y: node.y }"
+              class="flow-node"
+              [class.node-start]="node.type === 'start'"
+              [class.node-end]="node.type === 'end'"
+              [class.node-step]="node.type === 'step'"
+            >
+              <div
+                fDragHandle
+                class="node-body"
+                (click)="node.type === 'step' && openStepModal(node.id)"
+              >
+                @if (node.type === 'start') {
+                  <span>▶ Start</span>
+                } @else if (node.type === 'end') {
+                  <span>✓ Approved</span>
+                } @else {
+                  <span>{{ node.label || 'Click to set role' }}</span>
+                }
+              </div>
+
+              @if (node.type !== 'end') {
+                <div fConnector fConnectorType="source" [fConnectorId]="node.id + '-out'" fConnectorConnectableSide="right" class="connector-dot connector-right"></div>
+              }
+              @if (node.type !== 'start') {
+                <div fConnector fConnectorType="target" [fConnectorId]="node.id + '-in'" fConnectorConnectableSide="left" class="connector-dot connector-left"></div>
+              }
+            </div>
+          }
+        </ng-container>
+
+      </f-canvas>
+    </f-flow>
+  </div>
+
+  @if (editingNodeId() !== null) {
+    <div class="modal-backdrop" (click)="closeStepModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Approval step</h3>
+
+        <div class="field">
+          <label>Required role</label>
+          <select [(ngModel)]="editingRole" name="editingRole">
+            <option value="" disabled>Select a role</option>
+            @for (role of roles(); track role.roleId) {
+              <option [value]="role.roleName">{{ role.roleName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Time limit (hours)</label>
+          <input type="number" min="0" [(ngModel)]="editingTimeLimitHours" name="editingTimeLimitHours" placeholder="0 = no limit" />
+        </div>
+
+        <div class="field">
+          <label>Escalate to role (if overdue)</label>
+          <select [(ngModel)]="editingEscalationRole" name="editingEscalationRole">
+            <option value="">No escalation</option>
+            @for (role of roles(); track role.roleId) {
+              <option [value]="role.roleName">{{ role.roleName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-link btn-link-danger" (click)="deleteStep()">Delete step</button>
+          <button class="btn-secondary" (click)="closeStepModal()">Cancel</button>
+          <button class="btn-primary" (click)="confirmStepRole()">OK</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

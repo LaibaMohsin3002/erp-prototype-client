@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+
 interface POLineDto {
   poLineId: number;
   lineNo: number;
@@ -12,6 +13,8 @@ interface POLineDto {
   uom: string;
   qty: number;
   unitPrice: number;
+  discountPercent: number;
+  netPrice: number;
   amount: number;
 }
 
@@ -22,7 +25,12 @@ interface PODetailDto {
   supplierId: number;
   supplierName: string;
   remarks: string | null;
+  paymentTerms: string;
+  deliveryTerms: string;
+  deliveryLocation: string;
   status: string;
+  createdBy: string;
+  createdDate: string;
   totalQty: number;
   totalAmount: number;
   lines: POLineDto[];

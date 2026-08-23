@@ -61,6 +61,26 @@
           <label>Remarks</label>
           <span>{{ order.remarks || '—' }}</span>
         </div>
+        <div>
+          <label>Payment Terms</label>
+          <span>{{ order.paymentTerms }}</span>
+        </div>
+        <div>
+          <label>Delivery Terms</label>
+          <span>{{ order.deliveryTerms }}</span>
+        </div>
+        <div>
+          <label>Delivery Location</label>
+          <span>{{ order.deliveryLocation }}</span>
+        </div>
+        <div>
+        <label>Created By</label>
+        <span>{{ order.createdBy }}</span>
+      </div>
+      <div>
+        <label>Created Date</label>
+        <span>{{ order.createdDate | date:'medium' }}</span>
+      </div>
       </div>
     </div>
 
@@ -75,7 +95,9 @@
             <th>UOM</th>
             <th>Qty</th>
             <th>Unit Price</th>
+            <th>Discount %</th>
             <th>Amount</th>
+            <th>Net Price</th>
           </tr>
         </thead>
         <tbody>
@@ -87,6 +109,8 @@
               <td>{{ line.uom }}</td>
               <td>{{ line.qty }}</td>
               <td>{{ line.unitPrice | currency }}</td>
+              <td>{{ line.discountPercent }}%</td>
+              <td>{{ line.netPrice | currency }}</td>
               <td class="amount-cell">{{ line.amount | currency }}</td>
             </tr>
           }

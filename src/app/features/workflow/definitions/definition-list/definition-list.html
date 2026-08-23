@@ -1,0 +1,72 @@
+<div class="page">
+<div class="page-header">
+  <div>
+    <a routerLink="/" class="back-link">← Back to Home</a>
+    <h2>Workflow Definitions</h2>
+  </div>
+  <div class="header-buttons">
+    <button class="btn-secondary btn-sm" (click)="openManualCreate()">Quick Setup (Table)</button>
+    <button class="btn-primary btn-sm" (click)="openCreate()">New Workflow (Canvas)</button>
+  </div>
+</div>
+
+  <input class="search-input" placeholder="Search workflows..." [(ngModel)]="searchTerm" name="search" />
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Document Type</th>
+            <th>Amount Range</th>
+            <th>Steps</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (def of filteredDefinitions(); track def.workflowDefinitionId) {
+            <tr>
+              <td class="clickable" (click)="viewDetail(def.workflowDefinitionId)">{{ def.name }}</td>
+              <td>{{ def.documentType }}</td>
+              <td>{{ def.minAmount | currency }} – {{ def.maxAmount | currency }}</td>
+              <td>{{ def.stepCount }}</td>
+              <td>
+                <span class="status-badge" [class.active]="def.isActive" [class.inactive]="!def.isActive">
+                  {{ def.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-link" (click)="edit(def)">Edit (Canvas)</button>
+                <button class="btn-link" (click)="editManual(def)">Edit (Table)</button>
+                <button class="btn-link btn-link-danger" (click)="remove(def)">Delete</button>
+                @if (def.isActive) {
+                  <button class="btn-link btn-link-danger" (click)="setActive(def, false)">Deactivate</button>
+                } @else {
+                  <button class="btn-link" (click)="setActive(def, true)">Activate</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
+@if (pendingDeleteDef(); as def) {
+  <div class="modal-backdrop" (click)="cancelDelete()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Delete "{{ def.name }}"?</h3>
+      <p class="modal-body-text">This will permanently remove this workflow definition. This can't be undone.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelDelete()">Cancel</button>
+        <button class="btn-danger" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+}

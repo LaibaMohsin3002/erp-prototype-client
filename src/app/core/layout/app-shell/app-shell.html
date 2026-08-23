@@ -1,7 +1,7 @@
 <div class="shell">
-  @if (toast.message()) {
-  <div class="toast">{{ toast.message() }}</div>
-  }
+@if (toast.message()) {
+  <div class="toast" [class.toast-error]="toast.type() === 'error'">{{ toast.message() }}</div>
+}
   <nav class="topnav">
     <a routerLink="/" class="nav-brand">ERP<span>.</span></a>
     <div class="nav-user">

@@ -25,6 +25,7 @@ interface LineRow {
   itemId: number | null;
   qty: number;
   unitPrice: number;
+  discountPercent: number;
 }
 
 @Component({
@@ -34,6 +35,7 @@ interface LineRow {
   templateUrl: './po-create.html',
   styleUrl: './po-create.scss'
 })
+
 export class PoCreate implements OnInit {
   private apiUrl = 'https://localhost:7000/api'; // match your actual API port
 
@@ -46,9 +48,17 @@ export class PoCreate implements OnInit {
   supplierId: number | null = null;
   poDate = new Date().toISOString().substring(0, 10); // yyyy-MM-dd for <input type="date">
   remarks = '';
-  lines = signal<LineRow[]>([{ itemId: null, qty: 1, unitPrice: 0 }]);
+  lines = signal<LineRow[]>([{ itemId: null, qty: 1, unitPrice: 0, discountPercent: 0 }]);
+  paymentTerms = '';
+  deliveryTerms = '';
+  deliveryLocation = '';
 
-  lineTotal = (line: LineRow) => Math.round((line.qty || 0) * (line.unitPrice || 0) * 100) / 100;
+  paymentTermsOptions = ['Advance', 'Net 15', 'Net 30', 'Net 45', 'Net 60', 'COD', 'Milestone-based', 'Credit terms'];
+  deliveryTermsOptions = ['EXW', 'FOB', 'CIF', 'DDP'];
+
+  // lineTotal = (line: LineRow) => Math.round((line.qty || 0) * (line.unitPrice || 0) * 100) / 100;
+  netPrice = (line: LineRow) => Math.round(line.unitPrice * (1 - (line.discountPercent || 0) / 100) * 100) / 100;
+  lineTotal = (line: LineRow) => Math.round((line.qty || 0) * this.netPrice(line) * 100) / 100;
 
   grandTotal = computed(() =>
     this.lines().reduce((sum, l) => sum + this.lineTotal(l), 0)
@@ -73,14 +83,17 @@ constructor(private http: HttpClient, private router: Router, private toast: Toa
     this.lines.set(current);
   }
 
-  updateLine(index: number, field: 'qty' | 'unitPrice', value: number) {
-    const current = [...this.lines()];
-    current[index] = { ...current[index], [field]: value };
-    this.lines.set(current);
-  }
+  updateLine(index: number, field: 'qty' | 'unitPrice' | 'discountPercent', value: number) {
+  const current = [...this.lines()];
+  let clamped = value;
+  if (field === 'discountPercent') clamped = Math.min(100, Math.max(0, value || 0));
+  if (field === 'qty' || field === 'unitPrice') clamped = Math.max(0, value || 0);
+  current[index] = { ...current[index], [field]: clamped };
+  this.lines.set(current);
+}
 
   addLine() {
-    this.lines.set([...this.lines(), { itemId: null, qty: 1, unitPrice: 0 }]);
+    this.lines.set([...this.lines(), { itemId: null, qty: 1, unitPrice: 0, discountPercent: 0 }]);
   }
 
   removeLine(index: number) {
@@ -97,6 +110,11 @@ constructor(private http: HttpClient, private router: Router, private toast: Toa
       this.error.set('Please select a supplier.');
       return;
     }
+    if (!this.paymentTerms || !this.deliveryTerms || !this.deliveryLocation.trim()) {
+      this.error.set('Payment terms, delivery terms, and delivery location are required.');
+      return;
+    }
+
     const invalidLine = this.lines().some(l => !l.itemId || l.qty <= 0);
     if (invalidLine) {
       this.error.set('Every line needs an item selected and a quantity greater than zero.');
@@ -110,14 +128,19 @@ constructor(private http: HttpClient, private router: Router, private toast: Toa
       supplierId: this.supplierId,
       poDate: this.poDate,
       remarks: this.remarks,
-      lines: this.lines().map(l => ({ itemId: l.itemId, qty: l.qty, unitPrice: l.unitPrice }))
+      paymentTerms: this.paymentTerms,
+      deliveryTerms: this.deliveryTerms,
+      deliveryLocation: this.deliveryLocation,
+      lines: this.lines().map(l => ({ itemId: l.itemId, qty: l.qty, unitPrice: l.unitPrice, discountPercent: l.discountPercent }))
     };
 
+
    this.http.post(`${this.apiUrl}/purchaseorders`, payload).subscribe({
-  next: () => {
+    next: () => {
     this.toast.show('Purchase order created successfully.');
     this.router.navigate(['/scm/purchase-orders']);
   },
+
   error: (err) => {
     this.error.set(err.error ?? 'Failed to create purchase order.');
     this.saving.set(false);

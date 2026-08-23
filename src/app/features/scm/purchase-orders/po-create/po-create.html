@@ -28,8 +28,33 @@
         <input id="remarks" [(ngModel)]="remarks" name="remarks" placeholder="Optional" />
       </div>
 
+      <div class="form-row">
+        <div class="field">
+          <label for="paymentTerms">Payment Terms</label>
+          <select id="paymentTerms" [(ngModel)]="paymentTerms" name="paymentTerms">
+            <option value="" disabled selected>Select payment terms</option>
+            @for (opt of paymentTermsOptions; track opt) {
+              <option [value]="opt">{{ opt }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="deliveryTerms">Delivery Terms</label>
+          <select id="deliveryTerms" [(ngModel)]="deliveryTerms" name="deliveryTerms">
+            <option value="" disabled selected>Select delivery terms</option>
+            @for (opt of deliveryTermsOptions; track opt) {
+              <option [value]="opt">{{ opt }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="deliveryLocation">Delivery Location</label>
+        <input id="deliveryLocation" [(ngModel)]="deliveryLocation" name="deliveryLocation" placeholder="Delivery address" />
+      </div>
+
       <h3>Line Items</h3>
-      <table class="lines-table">
+      <!-- <table class="lines-table">
         <thead>
           <tr>
             <th>Item</th>
@@ -67,7 +92,51 @@
             </tr>
           }
         </tbody>
-      </table>
+      </table> -->
+
+      <table class="lines-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>UOM</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Disc %</th>
+          <th>Net Price</th>
+          <th>Line Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (line of lines(); track $index) {
+          <tr>
+            <td>
+              <select [ngModel]="line.itemId" (ngModelChange)="onItemSelected($index, $event)" name="item-{{$index}}">
+                <option [ngValue]="null">Select item</option>
+                @for (item of items(); track item.itemId) {
+                  <option [ngValue]="item.itemId">{{ item.itemCode }} — {{ item.itemDescription }}</option>
+                }
+              </select>
+            </td>
+            <td>{{ getItemUom(line.itemId) }}</td>
+            <td>
+              <input type="number" min="0" step="1" [ngModel]="line.qty" (ngModelChange)="updateLine($index, 'qty', $event)" name="qty-{{$index}}" />
+            </td>
+            <td>
+              <input type="number" min="0" step="0.01" [ngModel]="line.unitPrice" (ngModelChange)="updateLine($index, 'unitPrice', $event)" name="price-{{$index}}" />
+            </td>
+            <td>
+              <input type="number" min="0" max="100" step="0.01" [ngModel]="line.discountPercent" (ngModelChange)="updateLine($index, 'discountPercent', $event)" name="disc-{{$index}}" />
+            </td>
+            <td class="amount-cell">{{ netPrice(line) | currency }}</td>
+            <td class="amount-cell">{{ lineTotal(line) | currency }}</td>
+            <td>
+              <button type="button" class="btn-link btn-link-danger" (click)="removeLine($index)">Remove</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
 
       <button type="button" class="btn-secondary btn-sm" (click)="addLine()">+ Add line</button>
 

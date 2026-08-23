@@ -1,0 +1,88 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <a routerLink="/" class="back-link">← Back to Home</a>
+      <h2>My Delegations</h2>
+    </div>
+    <button class="btn-primary btn-sm" (click)="openCreate()">New delegation</button>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else if (delegations().length === 0) {
+      <p class="state-message">You haven't delegated to anyone.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Delegate</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of delegations(); track d.delegationId) {
+            <tr>
+              <td>{{ d.delegateUserName }}</td>
+              <td>{{ d.startDate | date:'mediumDate' }}</td>
+              <td>{{ d.endDate | date:'mediumDate' }}</td>
+              <td>{{ d.reason || '—' }}</td>
+              <td>
+                <span class="status-badge" [class.active]="d.isActive" [class.inactive]="!d.isActive">
+                  {{ d.isActive ? 'Active' : 'Revoked' }}
+                </span>
+              </td>
+              <td>
+                @if (d.isActive) {
+                  <button class="btn-link btn-link-danger" (click)="revoke(d)">Revoke</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  @if (formOpen()) {
+    <div class="modal-backdrop" (click)="closeForm()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>New delegation</h3>
+
+        <div class="field">
+          <label>Delegate to (username)</label>
+          <input [(ngModel)]="delegateUserName" name="delegateUserName" placeholder="e.g. secadmin1" />
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Start date</label>
+            <input type="date" [(ngModel)]="startDate" name="startDate" />
+          </div>
+          <div class="field">
+            <label>End date</label>
+            <input type="date" [(ngModel)]="endDate" name="endDate" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Reason</label>
+          <input [(ngModel)]="reason" name="reason" placeholder="Optional" />
+        </div>
+
+        @if (formError()) {
+          <div class="error-message">{{ formError() }}</div>
+        }
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeForm()">Cancel</button>
+          <button class="btn-primary" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

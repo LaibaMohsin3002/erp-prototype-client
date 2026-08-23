@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../../../core/toast'; // adjust path
+import { RouterLink } from '@angular/router';
 
 interface PageDto {
   pageId: number;
@@ -16,7 +17,7 @@ interface PageDto {
 @Component({
   selector: 'app-pages-list',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './pages-list.html',
   styleUrl: './pages-list.scss'
 })

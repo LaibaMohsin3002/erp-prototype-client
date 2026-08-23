@@ -1,0 +1,112 @@
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.page-header { margin-bottom: var(--space-6); h2 { margin: 0; } }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: var(--space-6); }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.field {
+  margin-bottom: var(--space-4);
+  label { display: block; font-size: 13px; font-weight: 500; margin-bottom: var(--space-2); }
+  input, select {
+    width: 100%;
+    padding: 9px var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    &:focus-visible { outline: none; border-color: #c98a3a; box-shadow: 0 0 0 3px rgba(201, 138, 58, 0.15); }
+  }
+}
+
+h3 {
+  font-family: 'Space Grotesk', var(--font-sans);
+  font-size: 15px;
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.lines-table {
+  width: 100%;
+  margin-bottom: var(--space-3);
+
+  th, td { text-align: left; padding: var(--space-2); font-size: 13px; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-muted); font-weight: 500; }
+
+  input, select { padding: 6px var(--space-2); font-size: 13px; }
+  input[type="number"] { width: 90px; }
+}
+
+.amount-cell { font-weight: 500; white-space: nowrap; }
+
+.grand-total {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-2);
+  font-size: 15px;
+
+  strong { font-family: 'Space Grotesk', var(--font-sans); font-size: 20px; }
+}
+
+.error-message {
+  background: var(--danger-bg); color: var(--danger); padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius); font-size: 13px; margin-top: var(--space-4);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+
+.btn-primary {
+  padding: 10px 20px; background: #12151c; color: white; border: none; border-radius: var(--radius);
+  font-size: 13px; font-weight: 500;
+  &:hover:not(:disabled) { background: #262b38; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+.btn-secondary {
+  padding: 10px 20px; background: transparent; color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 13px; font-weight: 500;
+  &:hover { background: var(--bg); }
+}
+.btn-sm { padding: 7px 14px; }
+
+.state-message { padding: var(--space-8); text-align: center; color: var(--text-muted); }
+
+.back-link { display: inline-block; font-size: 12px; color: var(--text-muted); text-decoration: none; margin-bottom: 4px; &:hover { color: var(--primary); } }
+h3 { font-family: 'Space Grotesk', var(--font-sans); font-size: 15px; margin: var(--space-6) 0 var(--space-3); }
+
+.steps-table {
+  width: 100%; 
+  margin-bottom: var(--space-3);
+  th, td { text-align: left; padding: var(--space-2); font-size: 13px; }
+  
+  /* UPDATED: Now targets select dropdowns as well as inputs */
+  input, select { 
+    padding: 6px var(--space-2); 
+    font-size: 13px; 
+    width: 100%; 
+    border: 1px solid var(--border); 
+    border-radius: var(--radius);
+    font-family: inherit;
+    background: var(--surface);
+  }
+}
+
+.hint { font-size: 12px; color: var(--text-muted); margin: var(--space-2) 0 var(--space-4); }
+.btn-link { background: none; border: none; color: var(--primary); font-size: 13px; font-weight: 500; padding: 0; cursor: pointer; &:hover { text-decoration: underline; } }
+.btn-link-danger { color: var(--danger); }

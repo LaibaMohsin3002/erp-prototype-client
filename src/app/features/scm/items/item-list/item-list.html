@@ -1,8 +1,11 @@
 <div class="page">
   <div class="page-header">
+  <div>
+    <a routerLink="/" class="back-link">← Back to Home</a>
     <h2>Item Master</h2>
-    <button class="btn-primary btn-sm" (click)="openCreate()">New item</button>
   </div>
+  <button class="btn-primary btn-sm" (click)="openCreate()">New item</button>
+</div>
    
   <input class="search-input" placeholder="Search items..." [(ngModel)]="searchTerm" name="search" />
 

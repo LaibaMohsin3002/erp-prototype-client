@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Toast } from '../../../../core/toast'; // adjust path
+import { RouterLink } from '@angular/router';
 
 interface ItemDto {
   itemId: number;
@@ -16,7 +17,7 @@ interface ItemDto {
 @Component({
   selector: 'app-item-list',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './item-list.html',
   styleUrl: './item-list.scss'
 })

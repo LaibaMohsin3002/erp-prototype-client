@@ -1,0 +1,79 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <a routerLink="/workflow/definitions" class="back-link">← Back to Workflow Definitions</a>
+      <h2>{{ editingDefinitionId ? 'Edit Workflow (Table)' : 'Quick Workflow Setup' }}</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="field">
+        <label>Workflow name</label>
+        <input [(ngModel)]="name" name="name" placeholder="e.g. Standard PO Approval" />
+      </div>
+      <div class="field">
+        <label>Document type</label>
+        <input [(ngModel)]="documentType" name="documentType" placeholder="e.g. PurchaseOrder" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Min amount</label>
+        <input type="number" min="0" [(ngModel)]="minAmount" name="minAmount" />
+      </div>
+      <div class="field">
+        <label>Max amount</label>
+        <input type="number" min="0" [(ngModel)]="maxAmount" name="maxAmount" />
+      </div>
+    </div>
+
+    <h3>Steps</h3>
+    <table class="steps-table">
+      <thead>
+        <tr><th>Step</th><th>Required Role</th><th>Parallel Group</th><th>Time Limit (hrs)</th><th>Escalate To</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (step of steps(); track $index) {
+          <tr>
+            <td>{{ step.stepNo }}</td>
+            <!-- <td><input [ngModel]="step.requiredRole" (ngModelChange)="updateStep($index, 'requiredRole', $event)" name="role-{{$index}}" placeholder="e.g. SCM Manager" /></td> -->
+            <td>
+            <select [ngModel]="step.requiredRole" (ngModelChange)="updateStep($index, 'requiredRole', $event)" name="role-{{$index}}">
+                <option value="" disabled>Select role</option>
+                @for (role of roles(); track role.roleId) {
+                  <option [value]="role.roleName">{{ role.roleName }}</option>
+                }
+              </select>
+            </td>
+            <td><input type="number" min="0" [ngModel]="step.parallelGroup" (ngModelChange)="updateStep($index, 'parallelGroup', $event)" name="group-{{$index}}" /></td>
+            <td><input type="number" min="0" [ngModel]="step.timeLimitHours" (ngModelChange)="updateStep($index, 'timeLimitHours', $event)" name="time-{{$index}}" /></td>
+            <!-- <td><input [ngModel]="step.escalationRole" (ngModelChange)="updateStep($index, 'escalationRole', $event)" name="esc-{{$index}}" placeholder="Optional" /></td> -->
+            <td>
+              <select [ngModel]="step.escalationRole" (ngModelChange)="updateStep($index, 'escalationRole', $event)" name="esc-{{$index}}">
+                <option value="">No escalation</option>
+                @for (role of roles(); track role.roleId) {
+                  <option [value]="role.roleName">{{ role.roleName }}</option>
+                }
+              </select>
+            </td>
+            <td><button type="button" class="btn-link btn-link-danger" (click)="removeStep($index)">Remove</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <button type="button" class="btn-secondary btn-sm" (click)="addStep()">+ Add step</button>
+    <!-- <p class="hint">Steps sharing the same non-zero Parallel Group run together. Leave 0 for sequential steps.</p> -->
+    <p class="hint">Leave Parallel Group as 0 for a normal step that waits its turn. Give two or more steps the <em>same</em> number (e.g. both set to 1) if they should all be approved at the same time, in any order, before moving to the next step.</p>
+    @if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    }
+
+    <div class="form-actions">
+      <button class="btn-secondary" (click)="cancel()">Cancel</button>
+      <button class="btn-primary" (click)="save()" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : (editingDefinitionId ? 'Update Workflow' : 'Save Workflow') }}
+      </button>
+    </div>
+  </div>
+</div>

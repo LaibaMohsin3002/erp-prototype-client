@@ -1,11 +1,35 @@
-<div class="page">
+<!-- <div class="page">
   <div class="page-header">
+  <div>
+    <a routerLink="/" class="back-link">← Back to Home</a>
     <h2>Purchase Orders</h2>
-    <button class="btn-primary btn-sm" (click)="goToCreate()">New purchase order</button>
   </div>
+  <button class="btn-primary btn-sm" (click)="goToCreate()">New purchase order</button>
 
-  <input class="search-input" placeholder="Search purchase orders..." [(ngModel)]="searchTerm" name="search" />
+</div>
+<div class="filter-toolbar">
+  <div class="search-wrapper">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+    </svg>
+    <input class="search-input" placeholder="Search purchase orders..." [(ngModel)]="searchTerm" name="search" />
+  </div>
   
+  <div class="select-wrapper">
+    <select class="custom-select" [(ngModel)]="statusFilter" name="statusFilter">
+      <option value="">All statuses</option>
+      <option value="Draft">Draft</option>
+      <option value="Submitted">Submitted</option>
+      <option value="Approved">Approved</option>
+      <option value="Rejected">Rejected</option>
+      <option value="Returned">Returned</option>
+    </select>
+    <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+    </svg>
+  </div>
+</div>
+
   <div class="card">
     @if (loading()) {
       <p class="state-message">Loading purchase orders...</p>
@@ -32,6 +56,84 @@
               <td>{{ po.supplierName }}</td>
               <td>
                 <span class="status-badge" [class]="statusClass(po.status)">{{ po.status }}</span>              </td>
+              <td>{{ po.totalAmount | currency }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div> -->
+
+<div class="page">
+  <div class="page-header">
+    <div class="header-titles">
+      <a routerLink="/" class="back-link">
+        <svg style="width: 16px; height: 16px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+        </svg>
+        Back to Home
+      </a>
+      <h2>Purchase Orders</h2>
+    </div>
+    <button class="btn-primary" (click)="goToCreate()">
+      <svg style="width: 16px; height: 16px; margin-right: 6px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+      </svg>
+      New purchase order
+    </button>
+  </div>
+
+  <div class="filter-toolbar">
+    <div class="search-wrapper">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+      </svg>
+      <input class="search-input" placeholder="Search purchase orders..." [(ngModel)]="searchTerm" name="search" />
+    </div>
+    
+    <div class="select-wrapper">
+      <select class="custom-select" [(ngModel)]="statusFilter" name="statusFilter">
+        <option value="">All statuses</option>
+        <option value="Draft">Draft</option>
+        <option value="Submitted">Submitted</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Returned">Returned</option>
+      </select>
+      <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <p class="state-message">Loading purchase orders...</p>
+    } @else if (error()) {
+      <p class="state-message">{{ error() }}</p>
+    } @else if (orders().length === 0) {
+      <p class="state-message">No purchase orders yet.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>PO Number</th>
+            <th>Date</th>
+            <th>Supplier</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (po of filteredOrders(); track po.poId) {
+            <tr (click)="goToDetail(po.poId)" class="clickable-row">
+              <td>{{ po.poNumber }}</td>
+              <td>{{ po.poDate | date:'mediumDate' }}</td>
+              <td>{{ po.supplierName }}</td>
+              <td>
+                <span class="status-badge" [class]="statusClass(po.status)">{{ po.status }}</span>
+              </td>
               <td>{{ po.totalAmount | currency }}</td>
             </tr>
           }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../../../core/toast'; // adjust path
 import { Component, OnInit, signal, computed } from '@angular/core'; // add `computed` to the import
-
+import { RouterLink } from '@angular/router';
 interface UserListDto {
   userId: number;
   userName: string;
@@ -25,7 +25,7 @@ interface RoleListDto {
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './users-list.html',
   styleUrl: './users-list.scss'
 })
