@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Toast } from '../../../../core/toast'; // adjust relative path if needed
+import { ActivatedRoute } from '@angular/router';
 
 interface SupplierDto {
   supplierId: number;
@@ -64,15 +65,38 @@ export class PoCreate implements OnInit {
     this.lines().reduce((sum, l) => sum + this.lineTotal(l), 0)
   );
 
-constructor(private http: HttpClient, private router: Router, private toast: Toast) {}
+  editingPoId: number | null = null;
+
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private toast: Toast) {}
 
   ngOnInit() {
     this.http.get<SupplierDto[]>(`${this.apiUrl}/suppliers`).subscribe(data => {
       this.suppliers.set(data.filter(s => s.isActive));
       this.loading.set(false);
     });
-    this.http.get<ItemDto[]>(`${this.apiUrl}/items`).subscribe(data => {
-      this.items.set(data.filter(i => i.isActive));
+    this.http.get<ItemDto[]>(`${this.apiUrl}/items`).subscribe(data => this.items.set(data.filter(i => i.isActive)));
+
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.editingPoId = Number(idParam);
+      this.loadExisting(this.editingPoId);
+    }
+  }
+
+  private loadExisting(id: number) {
+    this.http.get<any>(`${this.apiUrl}/purchaseorders/${id}`).subscribe(po => {
+      this.supplierId = po.supplierId;
+      this.poDate = po.poDate.substring(0, 10);
+      this.remarks = po.remarks ?? '';
+      this.paymentTerms = po.paymentTerms;
+      this.deliveryTerms = po.deliveryTerms;
+      this.deliveryLocation = po.deliveryLocation;
+      this.lines.set(po.lines.map((l: any) => ({
+        itemId: l.itemId,
+        qty: l.qty,
+        unitPrice: l.unitPrice,
+        discountPercent: l.discountPercent
+      })));
     });
   }
 
@@ -105,48 +129,50 @@ constructor(private http: HttpClient, private router: Router, private toast: Toa
     return this.items().find(i => i.itemId === itemId)?.uom ?? '';
   }
 
-  save() {
-    if (!this.supplierId) {
-      this.error.set('Please select a supplier.');
-      return;
-    }
-    if (!this.paymentTerms || !this.deliveryTerms || !this.deliveryLocation.trim()) {
-      this.error.set('Payment terms, delivery terms, and delivery location are required.');
-      return;
-    }
+save() {
+  if (!this.supplierId) {
+    this.error.set('Please select a supplier.');
+    return;
+  }
+  if (!this.paymentTerms || !this.deliveryTerms || !this.deliveryLocation.trim()) {
+    this.error.set('Payment terms, delivery terms, and delivery location are required.');
+    return;
+  }
 
-    const invalidLine = this.lines().some(l => !l.itemId || l.qty <= 0);
-    if (invalidLine) {
-      this.error.set('Every line needs an item selected and a quantity greater than zero.');
-      return;
-    }
+  const invalidLine = this.lines().some(l => !l.itemId || l.qty <= 0);
+  if (invalidLine) {
+    this.error.set('Every line needs an item selected and a quantity greater than zero.');
+    return;
+  }
 
-    this.saving.set(true);
-    this.error.set('');
+  this.saving.set(true);
+  this.error.set('');
 
-    const payload = {
-      supplierId: this.supplierId,
-      poDate: this.poDate,
-      remarks: this.remarks,
-      paymentTerms: this.paymentTerms,
-      deliveryTerms: this.deliveryTerms,
-      deliveryLocation: this.deliveryLocation,
-      lines: this.lines().map(l => ({ itemId: l.itemId, qty: l.qty, unitPrice: l.unitPrice, discountPercent: l.discountPercent }))
-    };
+  const payload = {
+    supplierId: this.supplierId,
+    poDate: this.poDate,
+    remarks: this.remarks,
+    paymentTerms: this.paymentTerms,
+    deliveryTerms: this.deliveryTerms,
+    deliveryLocation: this.deliveryLocation,
+    lines: this.lines().map(l => ({ itemId: l.itemId, qty: l.qty, unitPrice: l.unitPrice, discountPercent: l.discountPercent }))
+  };
 
+  const request = this.editingPoId
+    ? this.http.put(`${this.apiUrl}/purchaseorders/${this.editingPoId}`, payload)
+    : this.http.post(`${this.apiUrl}/purchaseorders`, payload);
 
-   this.http.post(`${this.apiUrl}/purchaseorders`, payload).subscribe({
+  request.subscribe({
     next: () => {
-    this.toast.show('Purchase order created successfully.');
-    this.router.navigate(['/scm/purchase-orders']);
-  },
-
-  error: (err) => {
-    this.error.set(err.error ?? 'Failed to create purchase order.');
-    this.saving.set(false);
-  }
+      this.toast.show(this.editingPoId ? 'Purchase order updated successfully.' : 'Purchase order created successfully.');
+      this.router.navigate(['/scm/purchase-orders']);
+    },
+    error: (err) => {
+      this.error.set(err.error ?? `Failed to ${this.editingPoId ? 'update' : 'create'} purchase order.`);
+      this.saving.set(false);
+    }
   });
-  }
+}
 
   cancel() {
     this.router.navigate(['/scm/purchase-orders']);

@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-
+import { Location } from '@angular/common';
 
 interface POLineDto {
   poLineId: number;
@@ -61,8 +61,12 @@ export class PoDetail implements OnInit {
   history = signal<ApprovalHistoryDto[]>([]);
   submitting = signal(false);
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private location: Location) {}
 
+  goBack() {
+    this.location.back();
+  }
+  
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -98,5 +102,10 @@ submitForApproval() {
       this.submitting.set(false);
     }
   });
+}
+
+canEdit(): boolean {
+  const order = this.po();
+  return order !== null && (order.status === 'Draft' || order.status === 'Returned');
 }
 }

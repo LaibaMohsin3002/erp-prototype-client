@@ -30,8 +30,8 @@
           @for (d of delegations(); track d.delegationId) {
             <tr>
               <td>{{ d.delegateUserName }}</td>
-              <td>{{ d.startDate | date:'mediumDate' }}</td>
-              <td>{{ d.endDate | date:'mediumDate' }}</td>
+              <td>{{ d.startDate | date:'dd/MM/yyyy' }}</td>
+              <td>{{ d.endDate | date:'dd/MM/yyyy HH:mm' }}</td>
               <td>{{ d.reason || '—' }}</td>
               <td>
                 <span class="status-badge" [class.active]="d.isActive" [class.inactive]="!d.isActive">

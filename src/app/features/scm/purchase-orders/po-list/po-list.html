@@ -129,7 +129,7 @@
           @for (po of filteredOrders(); track po.poId) {
             <tr (click)="goToDetail(po.poId)" class="clickable-row">
               <td>{{ po.poNumber }}</td>
-              <td>{{ po.poDate | date:'mediumDate' }}</td>
+              <td>{{ po.poDate | date:'dd/MM/yyyy' }}</td>
               <td>{{ po.supplierName }}</td>
               <td>
                 <span class="status-badge" [class]="statusClass(po.status)">{{ po.status }}</span>

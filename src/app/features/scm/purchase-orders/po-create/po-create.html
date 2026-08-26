@@ -1,6 +1,6 @@
 <div class="page">
   <div class="page-header">
-    <h2>New Purchase Order</h2>
+    <h2>{{ editingPoId ? 'Edit Purchase Order' : 'New Purchase Order' }}</h2>
   </div>
 
   @if (loading()) {
@@ -152,7 +152,7 @@
       <div class="form-actions">
         <button class="btn-secondary" (click)="cancel()">Cancel</button>
         <button class="btn-primary" (click)="save()" [disabled]="saving()">
-          {{ saving() ? 'Saving...' : 'Save Purchase Order' }}
+          {{ saving() ? 'Saving...' : (editingPoId ? 'Update Purchase Order' : 'Save Purchase Order') }}
         </button>
       </div>
     </div>

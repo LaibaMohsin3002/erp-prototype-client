@@ -14,6 +14,7 @@ interface WorkflowDefinitionListDto {
   maxAmount: number;
   isActive: boolean;
   stepCount: number;
+  version: number;
 }
 
 @Component({
@@ -79,14 +80,6 @@ export class DefinitionList implements OnInit {
     this.router.navigate(['/workflow/definitions', id]);
   }
 
-  // setActive(def: WorkflowDefinitionListDto, isActive: boolean) {
-  //   const action = isActive ? 'activate' : 'deactivate';
-  //   this.http.patch(`${this.apiUrl}/${def.workflowDefinitionId}/${action}`, {}).subscribe({
-  //     next: () => this.load(),
-  //     error: () => this.error.set(`Failed to ${action} definition.`)
-  //   });
-  // }
-
   openManualCreate() {
   this.router.navigate(['/workflow/definitions/quick-setup']);
   }
@@ -108,4 +101,5 @@ export class DefinitionList implements OnInit {
   editManual(def: WorkflowDefinitionListDto) {
   this.router.navigate(['/workflow/definitions', def.workflowDefinitionId, 'edit-manual']);
   }
+  
 }

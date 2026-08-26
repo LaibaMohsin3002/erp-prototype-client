@@ -209,3 +209,5 @@ h4 { font-family: 'Space Grotesk', var(--font-sans); font-size: 14px; margin: va
 
 .modal-body-text { font-size: 13px; color: var(--text-muted); margin-bottom: var(--space-6); }
 .btn-danger { padding: 9px 16px; background: var(--danger); color: white; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 500; &:hover { background: #b91c1c; } }
+
+.version-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); }

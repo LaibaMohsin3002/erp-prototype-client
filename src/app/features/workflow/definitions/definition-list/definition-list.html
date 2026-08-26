@@ -32,7 +32,9 @@
         <tbody>
           @for (def of filteredDefinitions(); track def.workflowDefinitionId) {
             <tr>
-              <td class="clickable" (click)="viewDetail(def.workflowDefinitionId)">{{ def.name }}</td>
+              <td class="clickable" (click)="viewDetail(def.workflowDefinitionId)">
+                {{ def.name }} <span class="version-tag">v{{ def.version }}</span>
+              </td>
               <td>{{ def.documentType }}</td>
               <td>{{ def.minAmount | currency }} – {{ def.maxAmount | currency }}</td>
               <td>{{ def.stepCount }}</td>

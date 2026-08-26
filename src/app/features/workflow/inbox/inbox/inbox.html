@@ -1,6 +1,9 @@
 <div class="page">
   <div class="page-header">
-    <h2>My Approvals</h2>
+    <div>
+      <a routerLink="/" class="back-link">← Back to Home</a>
+      <h2>My Approvals</h2>
+    </div>
   </div>
 
   <div class="card">
@@ -15,19 +18,33 @@
         <thead>
           <tr>
             <th>Document</th>
-            <th>Type</th>
+            <th>Requester</th>
+            <th>Submitted</th>
             <th>Step</th>
-            <th>Received</th>
+            <th>Amount</th>
+            <th>Priority</th>
+            <th>Due</th>
+            <th>Status</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           @for (task of tasks(); track task.workflowTaskId) {
             <tr>
-              <td>{{ task.documentLabel }}</td>
-              <td>{{ task.documentType }}</td>
+              <td>
+                <a [routerLink]="documentLink(task)" class="doc-link">{{ task.documentNumber }}</a>
+              </td>
+              <td>{{ task.requester }}</td>
+              <td>{{ task.submittedDate | date:'dd/MM/yyyy' }}</td>
               <td>Step {{ task.stepNo }}</td>
-              <td>{{ task.createdDate | date:'short' }}</td>
+              <td>{{ task.amount !== null ? (task.amount | currency) : '—' }}</td>
+              <td>
+                <span class="priority-badge" [class]="priorityClass(task.priority)">{{ task.priority }}</span>
+              </td>
+              <td [class.overdue]="isOverdue(task.dueDate)">
+                {{ task.dueDate ? (task.dueDate | date:'dd/MM/yyyy HH:mm') : '—' }}
+              </td>
+              <td>{{ task.workflowStatus }}</td>
               <td>
                 <button class="btn-link" (click)="openAction(task.workflowTaskId)">Review</button>
               </td>
@@ -41,7 +58,10 @@
   @if (actioningTaskId() !== null) {
     <div class="modal-backdrop" (click)="cancelAction()">
       <div class="modal" (click)="$event.stopPropagation()">
-        <h3>Take action</h3>
+          <h3>Take action</h3>
+          <a [routerLink]="documentLink(tasks().find(t => t.workflowTaskId === actioningTaskId())!)" class="view-doc-link">
+            View full document details and approval history →
+          </a>
 
         <div class="field">
           <label for="comments">Comments</label>
@@ -54,6 +74,7 @@
 
         <div class="modal-actions">
           <button class="btn-secondary" (click)="cancelAction()">Cancel</button>
+          <button class="btn-outline-neutral" (click)="takeAction('RequestInfo')">Request Info</button>
           <button class="btn-link-danger btn-outline" (click)="takeAction('Return')">Return</button>
           <button class="btn-link-danger btn-outline" (click)="takeAction('Reject')">Reject</button>
           <button class="btn-primary" (click)="takeAction('Approve')">Approve</button>

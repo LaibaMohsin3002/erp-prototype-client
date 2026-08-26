@@ -14,6 +14,7 @@ export const routes: Routes = [
       { path: 'security-admin/pages', loadComponent: () => import('./features/security-admin/pages/pages-list/pages-list').then(m => m.PagesList) },
       { path: 'scm/purchase-orders', loadComponent: () => import('./features/scm/purchase-orders/po-list/po-list').then(m => m.PoList) },
       { path: 'scm/purchase-orders/new', loadComponent: () => import('./features/scm/purchase-orders/po-create/po-create').then(m => m.PoCreate) },
+      { path: 'scm/purchase-orders/:id/edit', loadComponent: () => import('./features/scm/purchase-orders/po-create/po-create').then(m => m.PoCreate) },
       { path: 'scm/purchase-orders/:id', loadComponent: () => import('./features/scm/purchase-orders/po-detail/po-detail').then(m => m.PoDetail) },
       { path: 'scm/items', loadComponent: () => import('./features/scm/items/item-list/item-list').then(m => m.ItemList) },
       { path: 'scm/suppliers', loadComponent: () => import('./features/scm/suppliers/supplier-list/supplier-list').then(m => m.SupplierList) },

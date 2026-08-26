@@ -186,3 +186,33 @@ table {
   font-weight: 500;
   &:hover { background: var(--danger-bg); }
 }
+
+.doc-link { color: var(--primary); text-decoration: none; font-weight: 500; &:hover { text-decoration: underline; } }
+
+.priority-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.priority-low { background: var(--bg); color: var(--text-muted); }
+  &.priority-normal { background: #eff6ff; color: #2563eb; }
+  &.priority-high { background: #fef3e2; color: #b45309; }
+  &.priority-critical { background: var(--danger-bg); color: var(--danger); }
+}
+
+.overdue { color: var(--danger); font-weight: 600; }
+
+.btn-outline-neutral {
+  padding: 9px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  &:hover { background: var(--bg); }
+}
+
+.view-doc-link { display: block; font-size: 13px; color: var(--primary); text-decoration: none; margin-bottom: var(--space-4); &:hover { text-decoration: underline; } }

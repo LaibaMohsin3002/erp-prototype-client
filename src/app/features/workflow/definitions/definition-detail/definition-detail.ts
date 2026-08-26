@@ -11,6 +11,7 @@ interface WorkflowStepDto {
   timeLimitHours: number;
   escalationRole: string | null;
 }
+
 interface WorkflowDefinitionDetailDto {
   workflowDefinitionId: number;
   name: string;
@@ -18,6 +19,9 @@ interface WorkflowDefinitionDetailDto {
   minAmount: number;
   maxAmount: number;
   isActive: boolean;
+  version: number;
+  isLatestVersion: boolean;
+  previousVersionId: number | null;
   steps: WorkflowStepDto[];
 }
 

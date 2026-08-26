@@ -11,6 +11,10 @@
         <p class="subtitle">
           <span class="doc-type-badge">{{ def.documentType }}</span>
           {{ def.minAmount | currency }} – {{ def.maxAmount | currency }}
+          <span class="version-tag">v{{ def.version }}</span>
+          @if (!def.isLatestVersion) {
+            <span class="historical-tag">Historical version — no longer active</span>
+          }
         </p>
       </div>
     </div>
