@@ -6,6 +6,10 @@
     </div>
     <button class="btn-primary btn-sm" (click)="openCreate()">New delegation</button>
   </div>
+  
+    @if (warning()) {
+    <div class="warning-banner">{{ warning() }}</div>
+  }
 
   <div class="card">
     @if (loading()) {
@@ -21,6 +25,7 @@
             <th>Delegate</th>
             <th>Start</th>
             <th>End</th>
+            <th>Scope</th>
             <th>Reason</th>
             <th>Status</th>
             <th></th>
@@ -32,6 +37,12 @@
               <td>{{ d.delegateUserName }}</td>
               <td>{{ d.startDate | date:'dd/MM/yyyy' }}</td>
               <td>{{ d.endDate | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                {{ d.documentType || 'All types' }}
+                @if (d.minAmount !== null || d.maxAmount !== null) {
+                  <br /><span class="scope-amount">{{ d.minAmount ?? 0 | currency }}–{{ d.maxAmount ?? '∞' }}</span>
+                }
+              </td>
               <td>{{ d.reason || '—' }}</td>
               <td>
                 <span class="status-badge" [class.active]="d.isActive" [class.inactive]="!d.isActive">
@@ -72,6 +83,21 @@
         <div class="field">
           <label>Reason</label>
           <input [(ngModel)]="reason" name="reason" placeholder="Optional" />
+        </div>
+
+        <div class="field">
+          <label>Document type (optional)</label>
+          <input [(ngModel)]="documentType" name="documentType" placeholder="e.g. PurchaseOrder — leave blank for all" />
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Min amount (optional)</label>
+            <input type="number" [(ngModel)]="minAmount" name="minAmount" placeholder="No minimum" />
+          </div>
+          <div class="field">
+            <label>Max amount (optional)</label>
+            <input type="number" [(ngModel)]="maxAmount" name="maxAmount" placeholder="No maximum" />
+          </div>
         </div>
 
         @if (formError()) {

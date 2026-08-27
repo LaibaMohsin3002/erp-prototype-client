@@ -176,3 +176,11 @@
   color: var(--danger);
   &:hover { background: var(--danger-bg); }
 }
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  cursor: pointer;
+}

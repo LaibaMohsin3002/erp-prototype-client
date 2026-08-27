@@ -45,16 +45,22 @@
       <div class="card">
         <table>
           <thead>
-            <tr><th>Step</th><th>Role</th><th>Status</th><th>Actioned By</th><th>Date</th><th>Comments</th></tr>
+            <tr><th>Step</th><th>Role</th><th>Action</th><th>Status</th><th>Actioned By</th><th>Date</th><th>Comments</th></tr>
           </thead>
           <tbody>
-            @for (h of history(); track h.stepNo) {
+            @for (h of history(); track $index) {
               <tr>
-                <td>{{ h.stepNo }}</td>
-                <td>{{ h.assignedRole }}</td>
-                <td>{{ h.status }}</td>
-                <td>{{ h.actionedBy || '—' }}</td>
-                <td>{{ h.actionedDate ? (h.actionedDate |date:'dd/MM/yyyy') : '—' }}</td>
+                <td>{{ h.stepNo ?? '—' }}</td>
+                <td>{{ h.assignedApproverRole ?? '—' }}</td>
+                <td>{{ h.action }}</td>
+                <td>{{ h.newStatus ?? '—' }}</td>
+                <td>
+                  {{ h.actingUser }}
+                  @if (h.delegatedFromUser) {
+                    <span class="delegation-tag"> (on behalf of {{ h.delegatedFromUser }})</span>
+                  }
+                </td>
+                <td>{{ h.actionDate | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td>{{ h.comments || '—' }}</td>
               </tr>
             }

@@ -44,28 +44,8 @@ table {
 
 .state-message { padding: var(--space-8); text-align: center; color: var(--text-muted); }
 
-.btn-primary {
-  padding: 9px 16px;
-  background: #12151c;
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 13px;
-  font-weight: 500;
-  &:hover { background: #262b38; }
-}
-.btn-sm { padding: 7px 14px; }
 
-.btn-secondary {
-  padding: 9px 16px;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 13px;
-  font-weight: 500;
-  &:hover { background: var(--bg); }
-}
+.btn-sm { padding: 7px 14px; }
 
 .btn-link {
   background: none;
@@ -78,36 +58,8 @@ table {
   &:hover { text-decoration: underline; }
   &:last-child { margin-right: 0; }
 }
-.btn-link-danger {
-  color: var(--danger);
-}
 
-// Modal
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(18, 21, 28, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
 
-.modal {
-  background: var(--surface);
-  border-radius: 8px;
-  padding: var(--space-6);
-  width: 100%;
-  max-width: 420px;
-  max-height: 85vh;
-  overflow-y: auto;
-
-  h3 {
-    font-family: 'Space Grotesk', var(--font-sans);
-    font-size: 17px;
-    margin-bottom: var(--space-4);
-  }
-}
 
 .field {
   margin-bottom: var(--space-4);
@@ -158,13 +110,6 @@ table {
   margin-top: var(--space-4);
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  margin-top: var(--space-6);
-}
-
 .search-input {
   width: 100%;
   max-width: 320px;
@@ -175,16 +120,6 @@ table {
   font-family: inherit;
   margin-bottom: var(--space-4);
   &:focus-visible { outline: none; border-color: #c98a3a; box-shadow: 0 0 0 3px rgba(201, 138, 58, 0.15); }
-}
-
-.btn-outline {
-  padding: 9px 16px;
-  background: transparent;
-  border: 1px solid var(--danger);
-  border-radius: var(--radius);
-  font-size: 13px;
-  font-weight: 500;
-  &:hover { background: var(--danger-bg); }
 }
 
 .doc-link { color: var(--primary); text-decoration: none; font-weight: 500; &:hover { text-decoration: underline; } }
@@ -205,14 +140,91 @@ table {
 
 .overdue { color: var(--danger); font-weight: 600; }
 
-.btn-outline-neutral {
-  padding: 9px 16px;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 21, 28, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: var(--space-6);
+  width: 100%;
+  max-width: 520px;  // wider to fit buttons
+  max-height: 85vh;
+  overflow-y: auto;
+
+  h3 {
+    font-family: 'Space Grotesk', var(--font-sans);
+    font-size: 17px;
+    margin-bottom: var(--space-4);
+  }
+}
+
+.view-doc-link {
+  display: block;
   font-size: 13px;
+  color: var(--primary);
+  text-decoration: none;
+  margin-bottom: var(--space-4);
+  &:hover { text-decoration: underline; }
+}
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+
+// Consistent button sizing
+.btn-secondary,
+.btn-outline,
+.btn-outline-neutral,
+.btn-link-danger.btn-outline {
+  padding: 8px 14px;
+  font-size: 12px;
+  white-space: nowrap;
+  border-radius: var(--radius);
   font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #12151c;
+  color: white;
+  border: none;
+  &:hover:not(:disabled) { background: #262b38; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
   &:hover { background: var(--bg); }
 }
 
-.view-doc-link { display: block; font-size: 13px; color: var(--primary); text-decoration: none; margin-bottom: var(--space-4); &:hover { text-decoration: underline; } }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  &:hover { background: var(--danger-bg); }
+}
+
+.btn-outline-neutral {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  &:hover { background: var(--bg); }
+}
+
+.btn-link-danger {
+  color: var(--danger);
+}

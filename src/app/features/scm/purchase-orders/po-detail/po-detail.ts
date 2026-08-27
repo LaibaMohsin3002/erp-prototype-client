@@ -37,11 +37,13 @@ interface PODetailDto {
 }
 
 interface ApprovalHistoryDto {
-  stepNo: number;
-  assignedRole: string;
-  status: string;
-  actionedBy: string | null;
-  actionedDate: string | null;
+  stepNo: number | null;
+  assignedApproverRole: string | null;
+  action: string;
+  newStatus: string | null;
+  actingUser: string;
+  delegatedFromUser: string | null;
+  actionDate: string;
   comments: string | null;
 }
 
